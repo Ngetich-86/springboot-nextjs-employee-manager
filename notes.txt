@@ -1,0 +1,25 @@
+Initial project setup
+
+Configure Spring Boot and Next.js
+
+Configure PostgreSQL and Flyway
+
+Implement JWT authentication
+
+Create User and Employee entities
+
+Implement Employee CRUD endpoints
+
+Add search, pagination, and sorting
+
+Build login page
+
+Implement employee dashboard
+
+Connect frontend to backend
+
+Add CSV and JSON export
+
+Improve validation and error handling
+
+Update README
