@@ -1,0 +1,37 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Windows metadata
+*:Zone.Identifier
+
+# IDEs
+.vscode/
+.idea/
+*.iml
+
+# Environment variables
+.env
+.env.*
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.swp
+
+# Archives
+*.zip
+*.tar
+*.gz
+
+# Coverage & reports
+coverage/
+reports/
+
+# Docker
+docker-compose.override.yml
+
+# Personal notes
+notes.txt
