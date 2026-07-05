@@ -1,3 +1,5 @@
+export type { LoginFormValues, RegisterFormValues } from "@/lib/validators";
+
 export enum Role {
   ADMIN = "ADMIN",
   USER = "USER",
