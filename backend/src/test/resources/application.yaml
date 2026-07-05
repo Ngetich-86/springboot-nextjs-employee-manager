@@ -1,0 +1,11 @@
+app:
+  rate-limit:
+    auth:
+      capacity: 10000
+      refill-tokens: 10000
+      refill-duration-minutes: 1
+
+spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 5

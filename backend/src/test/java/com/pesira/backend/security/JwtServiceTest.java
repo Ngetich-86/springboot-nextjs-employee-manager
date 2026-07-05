@@ -23,7 +23,7 @@ class JwtServiceTest {
 
         User user = new User();
         user.setId(42L);
-        user.setEmail("admin@pesira.local");
+        user.setEmail("admin@example.com");
         user.setPassword("encoded-password");
         user.setRole(Role.ADMIN);
         userPrincipal = new UserPrincipal(user);
@@ -34,7 +34,7 @@ class JwtServiceTest {
         String token = jwtService.generateToken(userPrincipal);
 
         assertThat(token).isNotBlank();
-        assertThat(jwtService.extractEmail(token)).isEqualTo("admin@pesira.local");
+        assertThat(jwtService.extractEmail(token)).isEqualTo("admin@example.com");
         assertThat(jwtService.isTokenValid(token, userPrincipal)).isTrue();
     }
 
@@ -44,7 +44,7 @@ class JwtServiceTest {
 
         User otherUser = new User();
         otherUser.setId(99L);
-        otherUser.setEmail("user@pesira.local");
+        otherUser.setEmail("user@example.com");
         otherUser.setPassword("encoded-password");
         otherUser.setRole(Role.USER);
 

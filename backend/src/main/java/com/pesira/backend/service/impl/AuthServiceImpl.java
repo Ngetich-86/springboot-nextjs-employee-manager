@@ -16,9 +16,9 @@ import com.pesira.backend.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
 
             UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
             return buildAuthResponse(principal);
-        } catch (BadCredentialsException exception) {
+        } catch (AuthenticationException exception) {
             throw new BusinessException("Invalid email or password", HttpStatus.UNAUTHORIZED.value());
         }
     }

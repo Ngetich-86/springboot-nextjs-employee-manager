@@ -1,0 +1,182 @@
+### Employee Management System API
+### Base URL for local development
+@baseUrl = http://localhost:8080
+@api = {{baseUrl}}/api/v1
+
+### Tokens are populated after login/register responses
+@adminToken = {{loginAdmin.response.body.data.accessToken}}
+@userToken = {{loginUser.response.body.data.accessToken}}
+
+###############################################################################
+# HEALTH
+###############################################################################
+
+### Health check — verifies the API is running (200)
+GET {{api}}/health
+
+###############################################################################
+# AUTHENTICATION
+###############################################################################
+
+### Register a new USER account — self-registration always creates USER role (201)
+# @name registerUser
+POST {{api}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "new.user@example.com",
+  "password": "password123"
+}
+
+### Register with invalid payload — validation error (400)
+POST {{api}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "not-an-email",
+  "password": "short"
+}
+
+### Login as seeded admin — returns JWT access token (200)
+# @name loginAdmin
+POST {{api}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+### Login as seeded standard user — returns JWT access token (200)
+# @name loginUser
+POST {{api}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "user123"
+}
+
+### Login with invalid credentials — unauthorized (401)
+POST {{api}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "wrong-password"
+}
+
+### Get current authenticated user — requires Bearer token (200)
+GET {{api}}/auth/me
+Authorization: Bearer {{adminToken}}
+
+### Get current user without token — unauthorized (401)
+GET {{api}}/auth/me
+
+###############################################################################
+# EMPLOYEES — CRUD, SEARCH, PAGINATION, SORTING, EXPORT
+###############################################################################
+
+### List employees with pagination, sorting, and search (200)
+GET {{api}}/employees?page=0&size=10&sortBy=lastName&sortDirection=asc&search=Jane
+Authorization: Bearer {{userToken}}
+
+### Get employee by ID — replace {id} with an existing employee ID (200)
+@employeeId = 1
+GET {{api}}/employees/{{employeeId}}
+Authorization: Bearer {{userToken}}
+
+### Get missing employee — not found (404)
+GET {{api}}/employees/999999
+Authorization: Bearer {{userToken}}
+
+### Create employee — ADMIN only (201)
+POST {{api}}/employees
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "firstName": "Jane",
+  "lastName": "Doe",
+  "email": "jane.doe@example.com",
+  "department": "Engineering",
+  "position": "Software Engineer",
+  "salary": 85000.00,
+  "hireDate": "2024-01-15"
+}
+
+### Create employee as USER — forbidden (403)
+POST {{api}}/employees
+Authorization: Bearer {{userToken}}
+Content-Type: application/json
+
+{
+  "firstName": "Blocked",
+  "lastName": "User",
+  "email": "blocked@example.com",
+  "department": "HR",
+  "position": "Coordinator",
+  "salary": 50000.00,
+  "hireDate": "2024-02-01"
+}
+
+### Update employee — ADMIN only (200)
+PUT {{api}}/employees/{{employeeId}}
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "firstName": "Janet",
+  "lastName": "Doe",
+  "email": "jane.doe@example.com",
+  "department": "Engineering",
+  "position": "Senior Engineer",
+  "salary": 95000.00,
+  "hireDate": "2024-01-15"
+}
+
+### Delete employee — ADMIN only (204)
+DELETE {{api}}/employees/{{employeeId}}
+Authorization: Bearer {{adminToken}}
+
+### Export employees as CSV (200)
+GET {{api}}/employees/export/csv?search=
+Authorization: Bearer {{userToken}}
+
+### Export employees as JSON (200)
+GET {{api}}/employees/export/json?search=
+Authorization: Bearer {{userToken}}
+
+### Employee endpoints without authentication — unauthorized (401)
+GET {{api}}/employees
+
+###############################################################################
+# USER / ROLE MANAGEMENT — ADMIN ONLY
+###############################################################################
+
+### List users with pagination and search (200)
+GET {{api}}/users?page=0&size=10&sortBy=email&sortDirection=asc
+Authorization: Bearer {{adminToken}}
+
+### Promote a user to ADMIN — replace {userId} with target user ID (200)
+@userId = 2
+PATCH {{api}}/users/{{userId}}/role
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "role": "ADMIN"
+}
+
+### Role management as standard user — forbidden (403)
+GET {{api}}/users
+Authorization: Bearer {{userToken}}
+
+### Demote user back to USER role (200)
+PATCH {{api}}/users/{{userId}}/role
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "role": "USER"
+}

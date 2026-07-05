@@ -14,8 +14,8 @@ class UserRepositoryTest extends AbstractIntegrationTest {
 
     @Test
     void seedDataContainsDefaultAccounts() {
-        assertThat(userRepository.findByEmail("admin@pesira.local")).isPresent();
-        assertThat(userRepository.findByEmail("user@pesira.local")).isPresent();
+        assertThat(userRepository.findByEmail("admin@example.com")).isPresent();
+        assertThat(userRepository.findByEmail("user@example.com")).isPresent();
         assertThat(userRepository.countByRole(Role.ADMIN)).isEqualTo(1);
         assertThat(userRepository.countByRole(Role.USER)).isEqualTo(1);
     }

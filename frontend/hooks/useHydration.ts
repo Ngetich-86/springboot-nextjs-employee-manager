@@ -4,19 +4,17 @@ import { useEffect, useState } from "react";
 import { useAuthStore } from "@/store/authStore";
 
 export function useAuthHydration(): boolean {
-  const [hydrated, setHydrated] = useState(false);
+  const [hydrated, setHydrated] = useState(() => useAuthStore.persist.hasHydrated());
 
   useEffect(() => {
-    const unsubscribe = useAuthStore.persist.onFinishHydration(() => {
-      setHydrated(true);
-    });
-
-    if (useAuthStore.persist.hasHydrated()) {
-      setHydrated(true);
+    if (hydrated) {
+      return undefined;
     }
 
-    return unsubscribe;
-  }, []);
+    return useAuthStore.persist.onFinishHydration(() => {
+      setHydrated(true);
+    });
+  }, [hydrated]);
 
   return hydrated;
 }

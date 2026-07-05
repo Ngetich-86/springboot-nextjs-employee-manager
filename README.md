@@ -160,7 +160,7 @@ PostgreSQL
 Email
 
 ```
-admin@pesira.local
+admin@example.com
 ```
 
 Password
@@ -176,7 +176,7 @@ admin123
 Email
 
 ```
-user@pesira.local
+user@example.com
 ```
 
 Password

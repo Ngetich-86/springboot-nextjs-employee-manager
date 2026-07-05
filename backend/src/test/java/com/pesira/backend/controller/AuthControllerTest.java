@@ -31,7 +31,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
-                                  "email": "admin@pesira.local",
+                                  "email": "admin@example.com",
                                   "password": "admin123"
                                 }
                                 """))
@@ -40,7 +40,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
                 .andExpect(jsonPath("$.message").value("Login successful"))
                 .andExpect(jsonPath("$.data.accessToken").isNotEmpty())
                 .andExpect(jsonPath("$.data.tokenType").value("Bearer"))
-                .andExpect(jsonPath("$.data.user.email").value("admin@pesira.local"))
+                .andExpect(jsonPath("$.data.user.email").value("admin@example.com"))
                 .andExpect(jsonPath("$.data.user.role").value("ADMIN"));
     }
 
@@ -50,7 +50,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
-                                  "email": "admin@pesira.local",
+                                  "email": "admin@example.com",
                                   "password": "wrong-password"
                                 }
                                 """))
@@ -84,13 +84,13 @@ class AuthControllerTest extends AbstractIntegrationTest {
 
     @Test
     void getCurrentUserReturnsAuthenticatedUser() throws Exception {
-        String token = loginAndExtractToken("user@pesira.local", "user123");
+        String token = loginAndExtractToken("user@example.com", "user123");
 
         mockMvc.perform(get("/api/v1/auth/me")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data.email").value("user@pesira.local"))
+                .andExpect(jsonPath("$.data.email").value("user@example.com"))
                 .andExpect(jsonPath("$.data.role").value("USER"));
     }
 

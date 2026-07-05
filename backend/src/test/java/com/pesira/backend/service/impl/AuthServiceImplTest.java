@@ -53,13 +53,13 @@ class AuthServiceImplTest {
     void setUp() {
         User user = new User();
         user.setId(1L);
-        user.setEmail("admin@pesira.local");
+        user.setEmail("admin@example.com");
         user.setPassword("encoded-password");
         user.setRole(Role.ADMIN);
 
         userPrincipal = new UserPrincipal(user);
         loginRequest = new LoginRequest();
-        loginRequest.setEmail("admin@pesira.local");
+        loginRequest.setEmail("admin@example.com");
         loginRequest.setPassword("admin123");
     }
 
@@ -68,7 +68,7 @@ class AuthServiceImplTest {
         Authentication authentication = new UsernamePasswordAuthenticationToken(userPrincipal, null);
         UserResponse userResponse = UserResponse.builder()
                 .id(1L)
-                .email("admin@pesira.local")
+                .email("admin@example.com")
                 .role(Role.ADMIN)
                 .build();
 
@@ -105,7 +105,7 @@ class AuthServiceImplTest {
     void getCurrentUserReturnsMappedUserResponse() {
         UserResponse userResponse = UserResponse.builder()
                 .id(1L)
-                .email("admin@pesira.local")
+                .email("admin@example.com")
                 .role(Role.ADMIN)
                 .build();
 

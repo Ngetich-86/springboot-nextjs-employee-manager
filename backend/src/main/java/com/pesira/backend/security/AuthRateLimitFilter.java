@@ -32,7 +32,13 @@ public class AuthRateLimitFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
-        return !request.getRequestURI().startsWith(ApiConstants.AUTH_API);
+        if (!"POST".equalsIgnoreCase(request.getMethod())) {
+            return true;
+        }
+
+        String requestUri = request.getRequestURI();
+        return !requestUri.equals(ApiConstants.AUTH_API + "/login")
+                && !requestUri.equals(ApiConstants.AUTH_API + "/register");
     }
 
     @Override
