@@ -12,7 +12,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -75,17 +74,21 @@ class JwtAuthenticationFilterIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void blankBearerTokenCurrentlyEscapesTheFilterChainUncaught() {
-        assertThatThrownBy(() -> mockMvc.perform(get(PROTECTED_ENDPOINT)
-                        .header("Authorization", "Bearer ")))
-                .isInstanceOf(IllegalArgumentException.class);
+    void blankBearerTokenReturnsControlled401() throws Exception {
+        mockMvc.perform(get(PROTECTED_ENDPOINT)
+                        .header("Authorization", "Bearer "))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.message").value("Authentication required"));
     }
 
     @Test
-    void whitespaceOnlyBearerTokenCurrentlyEscapesTheFilterChainUncaught() {
-        assertThatThrownBy(() -> mockMvc.perform(get(PROTECTED_ENDPOINT)
-                        .header("Authorization", "Bearer    ")))
-                .isInstanceOf(IllegalArgumentException.class);
+    void whitespaceOnlyBearerTokenReturnsControlled401() throws Exception {
+        mockMvc.perform(get(PROTECTED_ENDPOINT)
+                        .header("Authorization", "Bearer    "))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.message").value("Authentication required"));
     }
 
     @Test

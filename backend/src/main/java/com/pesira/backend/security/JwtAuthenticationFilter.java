@@ -42,6 +42,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = authHeader.substring(BEARER_PREFIX.length());
 
+        if (token.isBlank()) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         try {
             authenticateIfValid(request, token);
         } catch (JwtException exception) {
