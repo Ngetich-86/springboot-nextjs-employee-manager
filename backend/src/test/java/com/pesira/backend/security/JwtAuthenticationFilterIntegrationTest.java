@@ -74,6 +74,24 @@ class JwtAuthenticationFilterIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
+    void blankBearerTokenReturnsControlled401() throws Exception {
+        mockMvc.perform(get(PROTECTED_ENDPOINT)
+                        .header("Authorization", "Bearer "))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.message").value("Authentication required"));
+    }
+
+    @Test
+    void whitespaceOnlyBearerTokenReturnsControlled401() throws Exception {
+        mockMvc.perform(get(PROTECTED_ENDPOINT)
+                        .header("Authorization", "Bearer    "))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.message").value("Authentication required"));
+    }
+
+    @Test
     void requestWithoutTokenReturnsControlled401ForProtectedEndpoint() throws Exception {
         mockMvc.perform(get(PROTECTED_ENDPOINT))
                 .andExpect(status().isUnauthorized())
